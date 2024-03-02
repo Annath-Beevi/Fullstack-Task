@@ -9,13 +9,12 @@ const uploadFile = async (req, res, next) => {
         })
 
         const fileUpload = await file.save()
-        res.json('file uploaded successfully')
+        res.status(200).json(fileUpload)
 
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
     }
 }
-
 
 module.exports = { uploadFile }
 
