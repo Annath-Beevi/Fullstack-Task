@@ -16,5 +16,14 @@ const uploadFile = async (req, res, next) => {
     }
 }
 
-module.exports = { uploadFile }
+const getFile = async (req, res, next) => {
+    const { id } = req.params;
+    const pdf = await File.findById(id);
+    if (!pdf) {
+        return next(new ErrorHandler('PDF not found', 404))
+    }
+    res.json(pdf);
+}
+
+module.exports = { uploadFile, getFile }
 
