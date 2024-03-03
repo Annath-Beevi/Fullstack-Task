@@ -1,10 +1,9 @@
-import { Button, Checkbox, FileInput } from 'flowbite-react'
+import { Button, FileInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { server } from './server'
 import axios from 'axios'
-import PdfViewer from './PdfViewer';
+import PdfViewer from './Components/PdfViewer';
 import { pdfjs } from 'react-pdf';
-
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -13,13 +12,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 
 function App() {
-  const [file, setFile] = useState("")
+  const [file, setFile] = useState(null)
   const [pdfFile, setPdfFile] = useState(null)
 
   const handleChange = (e) => {
     const file = e.target.files[0]
-    setFile(file)
+    if (file.type === 'application/pdf') {
+      setFile(file);
+    } else {
+      alert('Please upload a PDF file.');
+    }
   }
+
 
   const showPdf = (pdf) => {
     setPdfFile(`http://localhost:7000/uploads/${pdf}`)
@@ -53,14 +57,15 @@ function App() {
       <div className="mt-10 flex flex-col justify-center items-center">
         {pdfFile === null ? "" :
           <>
-            <PdfViewer file={pdfFile} />
-            <Button>Create new Pdf</Button>
+            <PdfViewer pdfFile={pdfFile}/>
           </>
         }
-
       </div>
     </div>
   )
 }
 
 export default App
+
+
+
