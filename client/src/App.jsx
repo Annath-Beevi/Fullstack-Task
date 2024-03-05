@@ -13,6 +13,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 function App() {
   const [file, setFile] = useState(null)
+  const [res, setRes] = useState(null)
   const [pdfFile, setPdfFile] = useState(null)
 
   const handleChange = (e) => {
@@ -38,6 +39,7 @@ function App() {
     })
       .then((res) => {
         alert("File upload successfully")
+        setRes(res.data.file);
         showPdf(res.data.file)
       })
       .catch((err) => {
@@ -49,7 +51,7 @@ function App() {
     <div className='mb-32'>
       <div className="p-3 max-w-3xl mx-auto mt-16">
         <h1 className='text-3xl font-bold lg:text-4xl text-center text-blue-950'>File Upload</h1>
-        <form className='flex flex-col justify-center mt-10 border border-slate-300 p-20' onSubmit={handleSubmit}>
+        <form className='flex flex-col justify-center mt-10 border-2 border-slate-600 p-20' onSubmit={handleSubmit}>
           <FileInput type='file' accept='application/pdf' onChange={handleChange} required />
           <Button type='submit' gradientDuoTone="cyanToBlue" outline className='mt-4 max-w-20 sm:ml-64 ml-32'>Upload</Button>
         </form>
@@ -57,7 +59,7 @@ function App() {
       <div className="mt-10 flex flex-col justify-center items-center">
         {pdfFile === null ? "" :
           <>
-            <PdfViewer pdfFile={pdfFile}/>
+            <PdfViewer pdfFile={pdfFile} res={res}/>
           </>
         }
       </div>

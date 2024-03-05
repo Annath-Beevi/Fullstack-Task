@@ -1,16 +1,18 @@
 const express = require("express")
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv')
 const upload = require('./Routes/upload')
 const cors = require('cors')
 const ErrorHandler = require('./middlewares/Error')
 
 const app = express()
-app.use(express.json())
 dotenv.config()
 app.use(cors({
     origin: "http://localhost:5173",
 }))
+app.use(express.json())
+app.use(bodyParser.json())
 app.use("/uploads", express.static("uploads"))
 app.use('/api/file', upload)
 
