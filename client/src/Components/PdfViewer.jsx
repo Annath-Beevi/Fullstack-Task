@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { Checkbox, Button } from 'flowbite-react';
 import { server } from '../server';
 import axios from 'axios'
+import { IoDownloadOutline } from "react-icons/io5";
 
 const PdfViewer = ({ pdfFile, res }) => {
   const [numPages, setNumPages] = useState([]);
@@ -27,7 +28,15 @@ const PdfViewer = ({ pdfFile, res }) => {
 
   const handleCreatePDF = async () => {
     const response = await axios.get(`${server}/create-pdf?filePath=F:/MERN/Vidyalai/Task/server/uploads/${res}&pages=${selectedPages}`);
-    setNewPdf(response.data);
+    const base64Data = response.data.data;
+      const byteNumbers = atob(base64Data);
+      const arrayBuffer = new ArrayBuffer(byteNumbers.length);
+      const uintArray = new Uint8Array(arrayBuffer);
+
+      for (let i = 0; i < byteNumbers.length; i++) {
+        uintArray[i] = byteNumbers.charCodeAt(i);
+      }
+    setNewPdf(arrayBuffer);
   };
 
   const handleDownload = () => {
@@ -69,7 +78,7 @@ const PdfViewer = ({ pdfFile, res }) => {
         Create new Pdf
       </Button>
       {newPdf &&
-        <Button className='mt-10' onClick={handleDownload}>Download</Button>
+        <Button className='mt-10' onClick={handleDownload}><IoDownloadOutline size={22} className='mr-2'/> Download PDF</Button>
       }
     </div>
   );

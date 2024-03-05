@@ -51,8 +51,12 @@ const createNewPdf = async (req, res, next) => {
         copiedPage.forEach((page) => extractedPdf.addPage(page))
 
         const newPdfBytes = await extractedPdf.save()
+        const buf = Buffer.from(newPdfBytes)
+        const base64Data = buf.toString('base64')
+        const json = {data: base64Data}
+        const jsonString = JSON.stringify(json)
         res.setHeader('Content-Type' , 'application/pdf');
-        res.status(200).send(newPdfBytes)
+        res.status(200).send(jsonString)
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
     }
